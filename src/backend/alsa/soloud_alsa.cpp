@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 
 #include "soloud.h"
 #include "soloud_thread.h"
+#include "CL_Log.h"
 
 #if !defined(WITH_ALSA)
 
@@ -120,6 +121,8 @@ namespace SoLoud
         rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
         if (rc < 0)
         {
+            const char* errMsg = snd_strerror(rc);
+            WAR_LOG_ERROR(CAT_GENERAL, "ALSA error: %s", errMsg);
             return UNKNOWN_ERROR;
         }
         
@@ -139,12 +142,16 @@ namespace SoLoud
         rc = snd_pcm_hw_params_set_rate_near(handle, params, &val, &dir);
         if (rc < 0)
         {
+            const char* errMsg = snd_strerror(rc);
+            WAR_LOG_ERROR(CAT_GENERAL, "ALSA error: %s", errMsg);
             return UNKNOWN_ERROR;
         }
 
         rc = snd_pcm_hw_params(handle, params);
         if (rc < 0) 
         {
+            const char* errMsg = snd_strerror(rc);
+            WAR_LOG_ERROR(CAT_GENERAL, "ALSA error: %s", errMsg);
             return UNKNOWN_ERROR;
         }
 
